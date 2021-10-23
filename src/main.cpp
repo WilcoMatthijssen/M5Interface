@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
+
 #include <M5EPD.h>
 #include <WiFi.h>
 #include "navbar.h"

@@ -1,4 +1,4 @@
-#include <arduino.h>
+#include <Arduino.h>
 #include <M5EPD.h>
 class NavBar{
 public:
@@ -18,7 +18,7 @@ public:
         canvas.drawString( String(percentage) + "%", x, y);
     }
 
-    
+
 
     void draw(M5EPD_Canvas& canvas){
         canvas.fillRect(0, 0, 540, 100, 15);
