@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <M5EPD.h>
+#include "secrets.h"
 class NavBar{
 public:
     
@@ -35,7 +36,7 @@ public:
         canvas.fillRect(0, 700, 540, 100, 1);
         canvas.fillRect(0, 800, 540, 100, 0);
     
- 
+        
     
   
         draw_battery(400, 10, canvas);
