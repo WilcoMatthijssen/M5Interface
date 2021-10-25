@@ -22,47 +22,35 @@ void setup(){
 
     canvas.setTextSize(4);
 
-    // WiFi.begin(SSID, PASSWORD);
-    // while (WiFi.status() != WL_CONNECTED) {
-    // delay(500);
-    //     Serial.print(".");
-    // }
-    // Serial.print("WiFi connected with IP: ");
-    // Serial.println(WiFi.localIP());
+    WiFi.begin(SSID, PASSWORD);
+    while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+        Serial.print(".");
+    }
+    Serial.print("WiFi connected with IP: ");
+    Serial.println(WiFi.localIP());
 
-    // http.useHTTP10(true);
-    // String request = "https://weerlive.nl/api/json-data-10min.php?key=" + String( WEATHER_API_KEY ) + "&locatie="+ String(LOCATION);
-    // http.begin(request);
-    // http.GET();
+    http.useHTTP10(true);
+    String request = "https://weerlive.nl/api/json-data-10min.php?key=" + String( WEATHER_API_KEY ) + "&locatie="+ String(LOCATION);
+    http.begin(request);
+    http.GET();
 
-    // DynamicJsonDocument doc(2048);
-    // deserializeJson(doc, http.getStream());
+    DynamicJsonDocument doc(2048);
+    deserializeJson(doc, http.getStream());
+    http.end();
+ 
 
-    
-    // // Disconnect
-    // http.end();
-    // String output;
-    // serializeJson(doc, output);
-    // Serial.println(output);
-    
-}
-// #include <Free_Fonts.h>
-void loop(){
 
     canvas.fillCanvas(0);
 
-  
-    // canvas.drawPngUrl("http://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Weather_Icons_-_bkn.svg/240px-Weather_Icons_-_bkn.svg.png", 300 ,300);
 
-    // canvas.drawPngFile(SD, "/Weather.png", 300, 300);
-
-
-    
-    nv.draw();
-
-    
+    JsonObject obj = doc["liveweer"][0].as<JsonObject>();
+    serializeJson(obj, Serial);
+      
+    nv.draw(obj);
     canvas.pushCanvas(0,0,UPDATE_MODE_GC16);
     
-    delay(10000);
-
+    M5.shutdown(3600);
 }
+
+void loop(){}

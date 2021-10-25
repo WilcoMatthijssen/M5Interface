@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <M5EPD.h>
 #include "secrets.h"
-
+#include <ArduinoJson.h>
 
 #include <Free_Fonts.h>
 class M5Interface{
@@ -30,21 +30,22 @@ public:
 
     void draw_weather_image(int x, int y, String weather){
         // I should be checking if the file even exists but the drawPngFile function does it for me to some extent.
+ 
         String filename = "/" + weather + ".png";
-        _canvas->drawPngFile(SD, filename.c_str(), x, y);
+        _canvas->drawPngFile(SD, filename.c_str(), x, y,0,0,65,0,1.3);
     }
 
 
-    void draw(){
+    void draw(JsonObject& json){
         _canvas->fillRect(0, 0, 540, 60, _canvas->G15);
         _canvas->fillRect(5, 5, 530, 50, _canvas->G0);
 
-        String weather = "Weather";
+
 
         _canvas->setTextSize(1);
         _canvas->setFreeFont(FF20);
 
-        draw_weather_image(40,150,weather);
+        draw_weather_image(0, 60, json["image"].as<String>());
   
         draw_battery(400, 10);
         draw_date(100, 10);
@@ -53,16 +54,13 @@ public:
 
         _canvas->setFreeFont(FF32);
 
-        _canvas->drawString("Neerslagkans: 40%", 10, 600);
-        _canvas->drawString("Temperatuur: 17.5C\n", 10, 650);
+        _canvas->drawString("Neerslagkans: " + json["d0neerslag"].as<String>() + "%", 10, 700);
+        _canvas->drawString("Temperatuur: " + json["temp"].as<String>() + "C\n", 10, 750);
 
         _canvas->setFreeFont(FF19);
-        _canvas->setCursor(0, 700);
-        _canvas->println("Zonnig, morgen overwegend bewolkt en af en toe regen");
+        _canvas->setCursor(0, 800);
+        _canvas->println(json["verw"].as<String>());
         _canvas->setTextSize(4);
-        // _canvas->drawString("Hello World", 45, 105);
-        // _canvas->drawString("Neerslagkans: 40%", 45, 700);
-        // _canvas->drawString("Temperatuur: 17.5C", 345, 700);
-        // _canvas->drawString("Zonnig, morgen overwegend bewolkt en af en toe regen", 45, 750);
+
     }
 };
