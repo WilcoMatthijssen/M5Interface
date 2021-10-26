@@ -21,7 +21,13 @@ public:
     }
 
     void draw_battery(const int& x, const int& y){
-        float dirty_percentage = (float)(M5.getBatteryVoltage() - 3300) / (float)(4350 - 3300);
+        // Get average of voltage because of fluctiations in measurements
+        const int sample_size = 100;
+        int voltage =0;
+        for(int i = 0; i< sample_size; ++i){ voltage += M5.getBatteryVoltage();}
+        voltage /= sample_size;
+
+        float dirty_percentage = (float)(voltage - 3300) / (float)(4350 - 3300);
         const int percentage = constrain(dirty_percentage * 100, 0, 100);
 
         _canvas->drawString( String(percentage) + "%", x, y);
