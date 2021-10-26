@@ -31,7 +31,7 @@ void setup(){
     Serial.println(WiFi.localIP());
 
     http.useHTTP10(true);
-    String request = "https://weerlive.nl/api/json-data-10min.php?key=" + String( WEATHER_API_KEY ) + "&locatie="+ String(LOCATION);
+    String request = "http://weerlive.nl/api/json-data-10min.php?key=" + String( WEATHER_API_KEY ) + "&locatie="+ String(LOCATION);
     http.begin(request);
     http.GET();
 
@@ -40,17 +40,23 @@ void setup(){
     http.end();
  
 
+    JsonObject obj = doc["liveweer"][0].as<JsonObject>();
+    // serializeJson(obj, Serial);
+
 
     canvas.fillCanvas(0);
-
-
-    JsonObject obj = doc["liveweer"][0].as<JsonObject>();
-    serializeJson(obj, Serial);
-      
     nv.draw(obj);
     canvas.pushCanvas(0,0,UPDATE_MODE_GC16);
+    delay(500);
     
-    M5.shutdown(3600);
+    RTC_Time sleep_time;
+    M5.RTC.getTime(&sleep_time);
+    sleep_time.hour += 1;
+    sleep_time.min   = 0;
+    sleep_time.sec   = 0;
+
+    M5.shutdown(sleep_time);
+
 }
 
 void loop(){}
