@@ -8,6 +8,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
+
 M5EPD_Canvas canvas(&M5.EPD);
 
 HTTPClient http;
@@ -15,7 +16,7 @@ M5Interface weatherdisplay(&canvas);
 
 
 
-
+// #include "m5interface.h"
 void setup(){
     M5.begin();
     
@@ -56,12 +57,7 @@ void setup(){
 }
 
 void loop(){
-    // sleep for 1 hour
-    // inside loop to prevent skipping sleep when powered from usb.
-    RTC_Time sleep_time;
-    M5.RTC.getTime(&sleep_time);
-    sleep_time.hour  = (sleep_time.hour + 1) % 24;
-    sleep_time.min   = 0;
-    sleep_time.sec   = 0;
-    M5.shutdown(sleep_time);
+    // sleep for half an hour
+    // inside loop to prevent skipping sleep when powered from usb
+    M5.shutdown(1800);
     }
